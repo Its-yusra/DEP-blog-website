@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Health is Wealth Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 2em;
+            background: white;
+            margin-top: 2em;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+        }
+        .categories {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2em;
+        }
+        .category {
+            flex: 1;
+            margin: 0 1em;
+            padding: 1em;
+            background: #e2e2e2;
+            text-align: center;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .category:hover {
+            background: #d4d4d4;
+        }
+        .category a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .create-post, .about-us, .posts {
+            margin-top: 3em;
+            padding: 2em;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .create-post input, .create-post textarea {
+            width: 100%;
+            padding: 1em;
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .create-post button {
+            padding: 1em 2em;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .posts {
+            margin-top: 3em;
+        }
+        .post {
+            margin-bottom: 2em;
+            padding: 1em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+        }
+        .post h3 {
+            margin-top: 0;
+        }
+        .delete-button, .edit-button {
+            margin-top: 1em;
+            padding: 0.5em 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .delete-button {
+            background: #e74c3c;
+            color: #fff;
+        }
+        .edit-button {
+            background: #3498db;
+            color: #fff;
+            margin-right: 0.5em;
+        }
+        .edit-form {
+            display: none; /* Initially hide edit form */
+            margin-top: 1em;
+            padding: 1em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f0f0f0;
+        }
+        .edit-form input, .edit-form textarea {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .edit-form button {
+            padding: 0.5em 1em;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Health is Wealth Blog</h1>
+        <p>Your go-to resource for health and wellness information.</p>
+        <div class="categories">
+            <div class="category">
+                <a href="health.html">Health</a>
+            </div>
+            <div class="category">
+                <a href="fitness.html">Fitness</a>
+            </div>
+        </div>
+          <!-- Create New Post Section -->
+        <div class="create-post">
+            <h2>Create New Post</h2>
+            <form id="createPostForm">
+                <input type="text" id="postTitle" placeholder="Post Title" required>
+                <textarea id="postContent" rows="10" placeholder="Post Content" required></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <!-- Display Posts Section -->
+        <div class="posts" id="posts">
+            <h2>Posts</h2>
+            <!-- Posts will be displayed here -->
+        </div>
+
+        <!-- Edit Post Form -->
+        <div class="edit-form" id="editForm">
+            <h2>Edit Post</h2>
+            <form id="updatePostForm">
+                <input type="hidden" id="editIndex" name="editIndex">
+                <input type="text" id="editPostTitle" name="editPostTitle" placeholder="Post Title" required>
+                <textarea id="editPostContent" name="editPostContent" rows="10" placeholder="Post Content" required></textarea>
+                <button type="submit">Update</button>
+                <button type="button" onclick="cancelEdit()">Cancel</button>
+            </form>
+        </div>
+
+        <!-- About Us Section -->
+        <div class="about-us">
+            <h2>About Us</h2>
+            <p>Hello and welcome to our blog! My name is Yusra Komal, and I'm a web developer with a deep passion for promoting health and wellness through technology.</p>
+            <p>This blog, centered around the theme "health is wealth," aims to inspire and educate our readers on living a healthier lifestyle.</p>
+            <p>Through insightful articles, practical tips, and expert advice, we strive to empower you to make informed decisions about your health. Whether you're looking for nutrition tips, fitness routines, or mental well-being strategies, Health is Wealth Blog is here to support your journey to a healthier you.</p>
+            <p>Feel free to explore our content, and don't hesitate to contact me at <a href="mailto:yusrakomal46@gmail.com">yusrakomal46@gmail.com</a> for any questions or collaboration opportunities. Thank you for joining us on this health-conscious journey!</p>
+        </div>
+    </div>
+
+    <script>
+       // Function to get posts from local storage
+function getPosts() {
+    let posts = localStorage.getItem('posts');
+    return posts ? JSON.parse(posts) : [];
+}
+
+// Function to save posts to local storage
+function savePosts(posts) {
+    localStorage.setItem('posts', JSON.stringify(posts));
+}
+
+// Function to render posts
+function renderPosts() {
+    const posts = getPosts();
+    const postsContainer = document.getElementById('posts');
+    postsContainer.innerHTML = '<h2>Posts</h2>';
+    
+    posts.forEach((post, index) => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+        postElement.innerHTML = `
+            <h3>${post.title}</h3>
+            <p>${post.content}</p>
+            <button class="edit-button" data-index="${index}">Edit</button>
+            <button class="delete-button" data-index="${index}">Delete</button>
+        `;
+        postsContainer.appendChild(postElement);
+    });
+
+    // Add event listeners to edit buttons
+    document.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const index = this.getAttribute('data-index');
+            editPost(index); // Call editPost with the index
+        });
+    });
+
+    // Add event listeners to delete buttons
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const index = this.getAttribute('data-index');
+            deletePost(index); // Call deletePost with the index
+        });
+    });
+}
+
+// Function to edit a post
+function editPost(index) {
+    const posts = getPosts();
+    document.getElementById('editPostTitle').value = posts[index].title;
+    document.getElementById('editPostContent').value = posts[index].content;
+    document.getElementById('editIndex').value = index; // Store the index for editing
+    showEditForm(); // Show the edit form
+}
+
+// Function to update a post
+document.getElementById('updatePostForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const index = document.getElementById('editIndex').value;
+    const updatedTitle = document.getElementById('editPostTitle').value;
+    const updatedContent = document.getElementById('editPostContent').value;
+
+    const posts = getPosts();
+    posts[index].title = updatedTitle;
+    posts[index].content = updatedContent;
+    savePosts(posts);
+    renderPosts();
+    hideEditForm(); // Hide the edit form after updating
+});
+
+// Function to cancel editing
+function cancelEdit() {
+    hideEditForm();
+}
+
+// Function to delete a post
+function deletePost(index) {
+    const posts = getPosts();
+    posts.splice(index, 1); // Remove the post at the specified index
+    savePosts(posts);
+    renderPosts();
+}
+
+// Function to show edit form
+function showEditForm() {
+    document.getElementById('editForm').style.display = 'block';
+}
+
+// Function to hide edit form
+function hideEditForm() {
+    document.getElementById('editForm').style.display = 'none';
+}
+
+// Function to handle form submission for creating a new post
+document.getElementById('createPostForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const title = document.getElementById('postTitle').value;
+    const content = document.getElementById('postContent').value;
+    const posts = getPosts();
+    posts.push({ title, content });
+    savePosts(posts);
+    renderPosts();
+    document.getElementById('createPostForm').reset();
+});
+
+// Render posts on page load
+renderPosts();
+
+    </script>
+</body>
+</html>
