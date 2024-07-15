@@ -43,8 +43,6 @@ Welcome to the Health Blog repository! This project is a web application designe
 
 Contributions are welcome! Fork the repository and submit a pull request with your enhancements or bug fixes.
 
-## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
    
